@@ -1,5 +1,5 @@
 /***********************************************************************
-Copyright 2019 Google LLC
+Copyright 2020 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ var COL_WEATHER_CONDITION = 3;
 var COL_WEATHER_DESCRIPTION = 4;
 var COL_WEATHER_TEMPERATURE = 5;
 var COL_WEATHER_HUMIDITY = 6;
-var COL_TIMEOFDAY = 7; 
+var COL_TIMEOFDAY = 7;
 var COL_LINEITEM_NEW_STATUS = 8;
 var COL_LINEITEM_STATUS = 10;
 var COL_LOG = 11;

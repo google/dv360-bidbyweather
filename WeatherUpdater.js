@@ -1,5 +1,5 @@
 /***********************************************************************
-Copyright 2019 Google LLC
+Copyright 2020 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -62,8 +62,8 @@ function updateWeatherData() {
     var timezone = apiData.timezone;
     var adjustedTs = timestamp + timezone;
     var d = new Date(adjustedTs * 1000);
-    var localHour = d.getUTCHours(); 
-    var formattedDate = getFormattedDate_();    
+    var localHour = d.getUTCHours();
+    var formattedDate = getFormattedDate_();
     weatherSheet.getRange(+row + 1, COL_WEATHER_CONDITION + 1).setValue(weather);
     weatherSheet.getRange(+row + 1, COL_WEATHER_DESCRIPTION + 1).setValue(weatherDetails);
     weatherSheet.getRange(+row + 1, COL_WEATHER_TEMPERATURE + 1).setValue(temp);

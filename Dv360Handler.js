@@ -1,5 +1,5 @@
 /***********************************************************************
-Copyright 2019 Google LLC
+Copyright 2020 Google LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -92,8 +92,8 @@ function readLineItems() {
             'displayName': result['lineItems'][entry]['displayName'],
             'entityStatus': result['lineItems'][entry]['entityStatus'],
           }
-          results[advertiserId][li] =liObject; 
-          Logger.log('New entry for LI ' + li + ': ' + results[advertiserId][li]);        
+          results[advertiserId][li] =liObject;
+          Logger.log('New entry for LI ' + li + ': ' + results[advertiserId][li]);
         }
       } else {
         throw('Some error occurred while calling the API for Advertiser ' + advertiserId);
@@ -110,7 +110,7 @@ function readLineItems() {
         'displayName': result['displayName'],
         'entityStatus': result['entityStatus'],
       }
-      results[advertiserId][lineItemId] =liObject; 
+      results[advertiserId][lineItemId] =liObject;
     }
     var status = results[advertiserId][lineItemId]['entityStatus']
         .replace('ENTITY_STATUS_', '') + ' (' + formattedDate + ')';
@@ -122,9 +122,3 @@ function readLineItems() {
   weatherSheet.getRange(2, COL_LINEITEM_STATUS + 1, logArray.length, logArray[0].length)
       .setValues(logArray);
 }
-
-
-
-
-
-
