@@ -76,21 +76,20 @@ thousands of campaigns.
 
 #### 2. Create a new Spreadsheet and import the custom code
 
-**TODO: choose whether users should copy an existing spreadsheet or expect the
-script to automatically generate the required sheets in a blank document.**
-
 -   Create a new [Google Spreadsheet](http://sheets.new/) and open its
     script editor (from _Tools > Script Editor_).
 -   Copy all the **.js files** from this project into corresponding .gs files in
     your Apps Script project (e.g. Code.js into Code.gs).
 -   Click on _View > Show manifest file_ to get access to the
-    **appsscript.json** file, and copy copy contents of appsscript.json' from
+    **appsscript.json** file, and copy copy contents of appsscript.json from
     this project (or even just the _oauthScopes_ object) into that file.
 -   Click on _Resources > Cloud Platform Project_. In the following pop-up
     window, in the section _Change Project_, put the Cloud Project Number you
     retrieved earlier.
 -   You can now close this tab and the Script Editor tab, and
     go back to the Google Sheet you've created.
+-   Refresh the Google Sheet to activate the code. The Google Sheet will be
+    automatically configurated by the tool.
 
 The first time users will use the tool, they will be prompted to grant the
 necessary authorizations to the application - such as accessing/editing DV360
@@ -106,14 +105,21 @@ This is the typical workflow when using the tool:
     -   You will only need to fill out the WHITE cells.
     -   In the first two columns, insert the Advertiser ID and the Line Item ID.
     -   In the third column, select the Location Name from the drop-down list.
-        **TODO** clarify approach based on new name/latlon mapping
-    -   **TODO** add and explain the "days ahead" column if confirmed
+        You should have prefilled your chosen locations in the _Cities_ sheet
+        with the location's name, its latitude and longitude.
+    -   In the next column, _Days from today_, please select the number of days
+        from today you wish to forecast for, up to 7. If you want the current 
+        day's forecast, choose 0, for the next day choose 1, etc. "Today" will
+        always refer to the day the script is run. By default, the tool checks 
+        the weather for midday, but that can be changed in the code. To see all
+        the available options, please refer to the [OpenWeatherMap
+        documentation](https://openweathermap.org/api/one-call-api).
     -   The _Line Item status to apply_ column is the one containing the actual
         logic you want to apply to determine the updated Line Item status,
         possibly leveraging the weather conditions available in the GRAY cells
         on the left (condition, temperature, humidity, ...). You can see the
         possible values reading the [OpenWeatherMap
-        documentation](https://openweathermap.org/current#parameter). You can
+        documentation](https://openweathermap.org/api/one-call-api). You can
         treat this as a regular spreadsheet formula, as long as it results in
         an acceptable value (i.e. _ACTIVE_ or _PAUSED_). For instance, if you
         want a line item to be "ACTIVE" only when the temperature is above 25
@@ -142,7 +148,7 @@ This is the typical workflow when using the tool:
         OpenWeatherMap API Key to be used by the tool, together with the
         timezone and the temperature unit (metric or imperial).
     -   The tool will go through the list of Line Items and their corresponding
-        geographical locations and query the OpenWeatherMap API
+        geographical locations and query the OpenWeatherMap API.
     -   The main resulting parameters (which can be easily customized by editing
         the code) - Condition, Description, Temperature, Humidity - will be
         inserted in the corresponding cells for each row.
@@ -162,7 +168,7 @@ This is the typical workflow when using the tool:
 5. If you want to retrieve the weather data _and_ update the DV360 Line Items
     status accordingly, i.e. if you want to run the previous two methods
     in sequence, select _DV360 BidByWeather > **Update Weather and Update Line
-    Items**_ from the toolbar
+    Items**_ from the toolbar.
 
 6. If you want to have the tool running automatically on a schedule, you can use
    Apps Script "triggers":
@@ -178,4 +184,4 @@ This is the typical workflow when using the tool:
 7. If you wish to cancel or modify user configuration data, select
    _DV360 BidByWeather > Clear current user config_ from the
     toolbar. When launching the tool again, you will be asked to re-enter the
-    configuration data
+    configuration data.
