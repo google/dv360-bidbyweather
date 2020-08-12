@@ -118,7 +118,7 @@ function initSpreadsheet_() {
     weatherSheet.getRange(1, COL_LINEITEM_NEW_STATUS + 1)
         .setValue('Line Item Status to apply');
     weatherSheet.getRange(1, COL_LINEITEM_NEW_STATUS + 2)
-        .setValue('<- Human-readable criteria ' + 
+        .setValue('<- Human-readable criteria ' +
             '(for readability only, not used by the tool)');
     weatherSheet.getRange(1, COL_LINEITEM_STATUS + 1)
         .setValue('Line Item Status');
@@ -154,7 +154,7 @@ function initSpreadsheet_() {
 
     var daysRule = SpreadsheetApp
         .newDataValidation()
-        .requireValueInList(['0', '1', '2', '3', '4', '5', '6', '7'])
+        .requireValueInList(['Current', '0', '1', '2', '3', '4', '5', '6', '7'])
         .build();
     var locationsRule = SpreadsheetApp
         .newDataValidation()

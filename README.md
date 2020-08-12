@@ -108,11 +108,12 @@ This is the typical workflow when using the tool:
         You should have prefilled your chosen locations in the _Cities_ sheet
         with the location's name, its latitude and longitude.
     -   In the next column, _Days from today_, please select the number of days
-        from today you wish to forecast for, up to 7. If you want the current 
-        day's forecast, choose 0, for the next day choose 1, etc. "Today" will
-        always refer to the day the script is run. By default, the tool checks 
-        the weather for midday, but that can be changed in the code. To see all
-        the available options, please refer to the [OpenWeatherMap
+        from today you wish to forecast for, up to 7. If you need the current
+        weather, select "Current". If you need the current day's forecast,
+        choose 0, for the next day choose 1, etc.
+        "Today" will always refer to the day the script is run. By default, the
+        tool checks  the weather for midday, but it can be changed in the code.
+        To see all the available options, please refer to the [OpenWeatherMap
         documentation](https://openweathermap.org/api/one-call-api).
     -   The _Line Item status to apply_ column is the one containing the actual
         logic you want to apply to determine the updated Line Item status,

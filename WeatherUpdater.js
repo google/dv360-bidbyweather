@@ -25,6 +25,7 @@ products and are not formally supported.
 var MAX_RETRIES = 10;
 var SLEEP_BETWEEN_LOCATIONS = 1000; // in milliseconds.
 var SLEEP_BETWEEN_RETRIES = 3000; // in milliseconds.
+var CURRENT = 'Current';
 var retries = 0;
 var locationsSearched = {};
 var locationsCoordinates = {};
@@ -40,53 +41,49 @@ function updateWeatherData() {
   getLocationsCoordinates_();
   locationsSearched = {};
   var values = weatherSheet.getDataRange().getValues();
-  for (row in values) {
-    if (row == 0) {
-      continue;
-    }
-    var locationString = values[row][COL_LOCATION_NAME].toString();
+  for (var v = 1; v < values.length; v++) {
+    var row = v + 1;
+    var locationString = values[v][COL_LOCATION_NAME].toString();
     if (locationString.length < 3) {
-      weatherSheet.getRange(+row + 1, COL_LOG + 1)
+      weatherSheet.getRange(row, COL_LOG + 1)
           .setValue('Weather update failed: location name missing!');
       continue;
     }
 
     retries = 0;
     var apiData = null;
-    apiData = locationsSearched[locationString] 
-        || getWeatherFromApi_(locationString);
-
+    apiData = locationsSearched[locationString] ||
+        getWeatherFromApi_(locationString);
     if (!apiData) {
-      weatherSheet.getRange(+row + 1, COL_LOG + 1)
+      weatherSheet.getRange(row, COL_LOG + 1)
           .setValue('Weather update failed: error with API call, despite ' +
           MAX_RETRIES + ' retries');
       continue;
     }
 
-    var days = parseInt(weatherSheet.getRange(+row + 1, COL_DAYS_LOOKUP + 1)
+    var days = weatherSheet.getRange(row, COL_DAYS_LOOKUP + 1)
         .getValue()
-        .toString());
-
-    var weather = apiData.daily[days].weather[0].main;
-    var weatherDetails = apiData.daily[days].weather[0].description;
-    var temp = apiData.daily[days].temp.day;
-    var humidity = apiData.daily[days].humidity;
-    var timestamp = apiData.daily[days].dt;
-    var d = new Date(timestamp * 1000);
+        .toString();
+    var weatherData = days == CURRENT ? apiData.current :
+        apiData.daily[parseInt(days)];
+    var weather = weatherData.weather[0].main;
+    var details = weatherData.weather[0].description;
+    var temp = days == CURRENT ? weatherData.temp : weatherData.temp.day;
+    var humidity = weatherData.humidity;
+    var timestamp = weatherData.dt;
+    var timezone = apiData.timezone_offset;
+    var adjustedTs = timestamp + timezone;
+    var d = new Date(adjustedTs * 1000);
     var localHour = d.getUTCHours();
     var formattedDate = getFormattedDate_();
 
-    weatherSheet.getRange(+row + 1, COL_WEATHER_CONDITION + 1)
-        .setValue(weather);
-    weatherSheet.getRange(+row + 1, COL_WEATHER_DESCRIPTION + 1)
-        .setValue(weatherDetails);
-    weatherSheet.getRange(+row + 1, COL_WEATHER_TEMPERATURE + 1)
-        .setValue(temp);
-    weatherSheet.getRange(+row + 1, COL_WEATHER_HUMIDITY + 1)
-        .setValue(humidity);
-    weatherSheet.getRange(+row + 1, COL_TIMEOFDAY + 1)
-        .setValue(localHour);
-    weatherSheet.getRange(+row + 1, COL_LOG + 1)
+
+    weatherSheet.getRange(row, COL_WEATHER_CONDITION + 1).setValue(weather);
+    weatherSheet.getRange(row, COL_WEATHER_DESCRIPTION + 1).setValue(details);
+    weatherSheet.getRange(row, COL_WEATHER_TEMPERATURE + 1).setValue(temp);
+    weatherSheet.getRange(row, COL_WEATHER_HUMIDITY + 1).setValue(humidity);
+    weatherSheet.getRange(row, COL_TIMEOFDAY + 1).setValue(localHour);
+    weatherSheet.getRange(row, COL_LOG + 1)
         .setValue('Weather condition updated at ' + formattedDate);
 
     locationsSearched[locationString] = apiData;
@@ -101,16 +98,16 @@ function updateWeatherData() {
 function getLocationsCoordinates_() {
   cities = citiesSheet.getDataRange().getValues();
 
-  for (row in cities) {
+  for (var row = 0; row < cities.length; row++) {
     locationsCoordinates[
-      citiesSheet.getRange(+row + 1, COL_CITY_NAME + 1)
+      citiesSheet.getRange(row + 1, COL_CITY_NAME + 1)
       .getValue()
       .toString()
     ] = {
-      'latitude': citiesSheet.getRange(+row + 1, COL_CITY_LATITUDE + 1)
+      'latitude': citiesSheet.getRange(row + 1, COL_CITY_LATITUDE + 1)
           .getValue()
           .toString(),
-      'longitude': citiesSheet.getRange(+row + 1, COL_CITY_LONGITUDE + 1)
+      'longitude': citiesSheet.getRange(row + 1, COL_CITY_LONGITUDE + 1)
           .getValue()
           .toString()
     };
@@ -134,7 +131,7 @@ function getWeatherFromApi_(location) {
   var longitude = locationData.longitude;
 
   var url = 'http://api.openweathermap.org/data/2.5/onecall?lat=' +
-      latitude + '&lon=' + longitude + '&exclude=current,minutely,hourly' +
+      latitude + '&lon=' + longitude + '&exclude=minutely,hourly' +
       '&appid=' + getUserConfiguration_('ApiKey') +
       '&units=' + getUserConfiguration_('Unit');
   retries++;
